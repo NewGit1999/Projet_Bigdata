@@ -1,0 +1,24 @@
+{
+    "name": "ELK + Flask Development Environment",
+    "image": "mcr.microsoft.com/devcontainers/python:3.9", 
+    "features": {
+      "docker-in-docker": "latest" 
+    },
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "editor.formatOnSave": true,
+          "python.defaultInterpreterPath": "/usr/local/bin/python"
+        },
+        "extensions": [
+          "ms-python.python",
+          "ms-python.vscode-pylance",
+          "ms-azuretools.vscode-docker"
+        ]
+      }
+    },
+    "postCreateCommand": "pip install flask flask-restful elasticsearch",
+    "forwardPorts": [5000, 9200, 5601],
+    "remoteUser": "vscode"
+  }
+  

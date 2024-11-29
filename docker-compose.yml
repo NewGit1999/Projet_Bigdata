@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.15.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.15.0
+    container_name: logstash
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logstash/config:/usr/share/logstash/config
+      - ./logstash/logs:/usr/share/logstash/logs
+    ports:
+      - "5044:5044"
+
+  mongodb:
+    # Optionnel, pour persistance supplémentaire
+    image: mongo:5.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  es_data:
+  mongo_data:
