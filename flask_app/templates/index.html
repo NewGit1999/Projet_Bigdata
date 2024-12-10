@@ -6,54 +6,88 @@
     <title>Upload de fichiers</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fc;
             margin: 0;
             padding: 0;
+        }
+        .navbar {
+            background-color: #4a90e2; /* Soft blue */
+            color: #fff;
+            padding: 15px 20px;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-left: 20px;
+            transition: color 0.3s;
+        }
+        .navbar a:hover {
+            color: #cce7ff; /* Lighter blue on hover */
         }
         .container {
-            width: 100%;
-            max-width: 600px;
+            width: 80%;
+            max-width: 800px;
             text-align: center;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
         h1 {
-            color: #333;
+            color: #4a4a4a;
+            font-size: 2rem;
+            margin-bottom: 20px;
         }
         .error-message {
-            color: red;
+            color: #d9534f;
+            font-size: 0.9rem;
             margin-bottom: 20px;
         }
         .file-upload {
-            margin-top: 20px;
+            margin: 20px 0;
         }
         .file-upload input[type="file"] {
             display: block;
             margin: 0 auto;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 8px;
+            background: #f8f9fa;
+            cursor: pointer;
         }
         button {
-            background-color: #007BFF;
-            color: white;
+            background-color: #fceab4; /* Pastel yellow */
+            color: #4a4a4a;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 25px;
+            border-radius: 25px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #fceab4; /* Slightly darker pastel yellow */
+            color: #333;
         }
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <h1>File Uploader</h1>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/search">Search</a>
+        </div>
+    </div>
     <div class="container">
         <h1>Uploader un fichier</h1>
         {% if error_message %}
@@ -69,7 +103,11 @@
         </form>
         <br>
         <form action="{{ url_for('show_visualization') }}" method="GET">
-            <button type="submit">Aller au Dashboard</button>
+            <button type="submit">Aller au Dashboard Csv</button>
+        </form>
+        <br>
+        <form action="{{ url_for('show_visualization2') }}" method="GET">
+            <button type="submit">Aller au Dashboard Json</button>
         </form>
     </div>
 </body>

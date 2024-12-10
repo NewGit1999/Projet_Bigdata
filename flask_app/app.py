@@ -9,7 +9,7 @@ from elasticsearch import Elasticsearch
 
 app = Flask(__name__)
 
-es = Elasticsearch(["http://elasticsearch:9200"])
+es = Elasticsearch(["http://localhost:9200"])
 
 LOGS_DIR = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), '..', 'logstash', 'logs')
@@ -19,9 +19,9 @@ if not os.path.exists(LOGS_DIR):
 
 
 # Define Kibana URL and visualization ID
-KIBANA_URL = "https://shiny-fiesta-7qvpxrj4g4jhp54w-5601.app.github.dev"
+KIBANA_URL = "https://5601-cs-9449e6d0-9054-4f9d-860f-d7ee587b3f1f.cs-europe-west1-xedi.cloudshell.dev"
 # /  # URL complète de votre instance Kibana
-VISUALIZATION_ID = "a2cbb630-b0ea-11ef-bffc-c7786914d8da"
+#VISUALIZATION_ID = "a2cbb630-b0ea-11ef-bffc-c7786914d8da"
 
 ALLOWED_EXTENSIONS = {'json', 'csv'}
 
@@ -66,20 +66,47 @@ def upload_file():
 @app.route('/dashboard')
 def show_visualization():
     return render_template('dashboard.html')
+@app.route('/dashboard2')
+def show_visualization2():
+    return render_template('dashboard2.html')
 
 def process_json(filename):
     with open(filename, 'r') as file:
         data = json.load(file)
         print(f"Fichier JSON traité: {filename}")
 
+        # Indexer le fichier JSON dans Elasticsearch
+        es.index(index="json2-2024-12-10", body=data)
+        
+        # Rafraîchir l'index pour que les données soient immédiatement disponibles
+        es.indices.refresh(index="logs-json-index")
+        print("Index rafraîchi dans Elasticsearch.")
+
+
 # Traiter le fichier CSV
 
 
+# def process_csv(filename):
+#     with open(filename, 'r') as file:
+#         reader = csv.reader(file)
+#         for row in reader:
+#             print(f"Ligne CSV: {row}")
+
 def process_csv(filename):
     with open(filename, 'r') as file:
-        reader = csv.reader(file)
+        # Utilisation de DictReader pour lire le CSV en tant que dictionnaire
+        reader = csv.DictReader(file)
         for row in reader:
-            print(f"Ligne CSV: {row}")
+            try:
+                # Indexer chaque ligne dans Elasticsearch
+                es.index(index="logs-csv-index", body=row)
+            except Exception as e:
+                print(f"Erreur lors de l'indexation dans Elasticsearch : {e}")
+        print(f"Fichier CSV importé dans Elasticsearch : {filename}")
+
+    # Rafraîchir l'index pour que les données soient immédiatement disponibles
+    es.indices.refresh(index="csv2-2024.12.10")
+    print("Index rafraîchi dans Elasticsearch.")
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -98,7 +125,7 @@ def search_logs():
                     }
                 }
             }
-            response = es.search(index="csv-2024.12.02", body=es_query)
+            response = es.search(index="csv2-2024.12.10", body=es_query)
             results = response.get('hits', {}).get('hits', [])
 
             # Remove duplicates based on 'LineId'

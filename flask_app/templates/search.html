@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="icon" href="{{ url_for('static', filename='csvjson-img.png') }}" type="image/x-icon"> -->
+    <title>Search</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+
+        .navbar {
+            background-color: #4a90e2;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-left: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #cce7ff;
+        }
+
+        .dashboard_container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header_dashboard h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .search-box {
+            margin-top: 2rem;
+        }
+
+        .search-input {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input input {
+            width: 60%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .search-input button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-input button:hover {
+            background-color: #3b7fc4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table thead {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        table th,
+        table td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <h1><i class="fas fa-search"></i> Search</h1>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/search">Search</a>
+        </div>
+    </div>
+    <div class="dashboard_container">
+        <div class="header_dashboard">
+            <!-- <a href="/"><img src="{{ url_for('static', filename='fleche.png') }}" alt=""></a> -->
+            <h1> <i class="fas fa-search"></i> Search</h1>
+        </div>
+
+        <div class="search-box">
+            <form method="POST" class="search-input">
+                <input type="text" name="query" placeholder="Entrez votre recherche..." value="{{ query }}">
+                <button type="submit">Rechercher</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Line Id</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>PID</th>
+                        <th>TID</th>
+                        <th>Level</th>
+                        <th>Component</th>
+                        <th>Content</th>
+                        <th>Event Id</th>
+                        <th>Event Template</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td>{{ result['_source']['LineId'] }}</td>
+                        <td>{{ result['_source']['Date'] }}</td>
+                        <td>{{ result['_source']['Time'] }}</td>
+                        <td>{{ result['_source']['Pid'] }}</td>
+                        <td>{{ result['_source']['Tid'] }}</td>
+                        <td>{{ result['_source']['Level'] }}</td>
+                        <td>{{ result['_source']['Component'] }}</td>
+                        <td>{{ result['_source']['Content'] }}</td>
+                        <td>{{ result['_source']['EventId'] }}</td>
+                        <td>{{ result['_source']['EventTemplate'] }}</td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
