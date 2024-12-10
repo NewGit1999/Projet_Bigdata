@@ -67,6 +67,20 @@ def upload_file():
 def show_visualization():
     return render_template('dashboard.html')
 
+def process_json(filename):
+    with open(filename, 'r') as file:
+        data = json.load(file)
+        print(f"Fichier JSON traité: {filename}")
+
+# Traiter le fichier CSV
+
+
+def process_csv(filename):
+    with open(filename, 'r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            print(f"Ligne CSV: {row}")
+
 
 @app.route('/search', methods=['GET', 'POST'])
 def search_logs():
